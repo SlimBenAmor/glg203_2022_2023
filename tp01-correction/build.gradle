@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+}
+
+version = '1.0'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    // Use junit 5.
+    useJUnitPlatform()
+}
+
+
+eclipse {
+  project {
+    // prevent project names collision in Eclipse!
+    name = 'tp01'
+    }
+}
+
+task distClean {
+  dependsOn("clean")
+  doLast {
+    delete "dist"
+    delete "bin"
+    delete ".classpath"
+    delete ".gradle"
+    delete ".nb-gradle"
+    delete ".project"
+    delete ".settings"
+    delete ".vscode"
+    delete '.DS_Store'
+    delete '.idea'
+    // le .gitignore peut être enlevé, il est implicite ici
+    // Les langages faiblement typés c'est la MAL.
+    fileTree(dir: 'libs', include:'*', excludes: ['README.md', '.gitignore']).visit { f -> delete f.file}
+  }
+}
