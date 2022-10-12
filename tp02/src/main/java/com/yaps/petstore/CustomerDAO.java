@@ -38,7 +38,7 @@ public final class CustomerDAO {
     public Customer find(final String id) throws CustomerNotFoundException {
         // If the given id doesn't exist we throw a CustomerNotFoundException
         if (!map.containsKey(id)) {
-            throw new CustomerNotFoundException();
+            throw new CustomerNotFoundException("CustomerNotFoundException");
         }
 
         return map.get(id);
@@ -54,7 +54,7 @@ public final class CustomerDAO {
     public void insert(final Customer customer) throws CustomerDuplicateKeyException, CustomerCheckException {
         // If the given id already exists we cannot insert the new Customer
         if (map.containsKey(customer.getId())) {
-            throw new CustomerDuplicateKeyException();
+            throw new CustomerDuplicateKeyException("CustomerDuplicateKeyException");
         }
         customer.checkData();
         // Puts the object into the hastable
@@ -71,7 +71,7 @@ public final class CustomerDAO {
 	public void update(final Customer customer) throws CustomerNotFoundException, CustomerCheckException {
 		customer.checkData();
 		if (!map.containsKey(customer.getId()))
-			throw new CustomerNotFoundException();
+			throw new CustomerNotFoundException("CustomerNotFoundException");
 		map.put(customer.getId(), customer);
 	}
 
@@ -84,7 +84,7 @@ public final class CustomerDAO {
     public void remove(final String id) throws CustomerNotFoundException {
         // If the given id does'nt exist we cannot remove the Customer from the hashmap
         if (!map.containsKey(id)) {
-            throw new CustomerNotFoundException();
+            throw new CustomerNotFoundException("CustomerNotFoundException");
         }
 
         // The object is removed from the hastable
