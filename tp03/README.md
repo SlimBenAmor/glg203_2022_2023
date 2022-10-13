@@ -1,4 +1,4 @@
-# tp02-annotations
+# TP 03 Annotations
 
 Dans ce TP, nous allons essayer d'utiliser des annotations pour automatiser les mécanismes de validation des objets.
 Les *use-case* restent les mêmes que dans le TP précédent.
