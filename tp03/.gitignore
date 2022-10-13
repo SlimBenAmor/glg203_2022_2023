@@ -1,0 +1,6 @@
+bin
+build
+
+.DS_Store
+README.html
+dist
