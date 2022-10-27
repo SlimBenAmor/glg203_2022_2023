@@ -1,0 +1,89 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.4'
+	id 'io.spring.dependency-management' version '1.1.0'
+	id 'java'
+    id 'eclipse'
+
+    // bon, gradle bootrun ne fournit pas de console... 
+    // on revient au bon vieux gradle run...
+    id 'application'
+}
+
+group = 'glg203'
+version = '0.0.1-SNAPSHOT'
+compileJava.options.encoding = 'UTF-8'
+
+// normalement inutile pour spring boot (l'application est trouvée par introspection)
+// mais gradle bootrun ne fonctionne pas à cause de l'entrée standard.
+// donc on repasse par gradle run.
+mainClassName = 'com.yaps.petstore.customerApplication.CustomerApplication'
+
+eclipse {
+  project {
+    // prevent project names collision in Eclipse!
+    name = 'tp05-spring'
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+
+
+ext { 
+    mainClassName = 'com.yaps.petstore.customerApplication.CustomerApplication'
+}
+
+
+// Configuration pour le plugin java
+jar {
+    manifest {
+        attributes "Main-Class": "${mainClassName}"
+    }
+}
+
+run {
+    standardInput = System.in
+}
+
+
+repositories {
+    mavenCentral()    
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	/* implementation 'org.flywaydb:flyway-core' (pour une version ultérieure)*/
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    testImplementation 'org.dbunit:dbunit:2.7.3'
+    runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+task distClean {
+  dependsOn("clean")
+  doLast {
+    delete "dist"
+    delete "bin"
+    delete ".classpath"
+    delete ".gradle"
+    delete ".nb-gradle"
+    delete ".project"
+    delete ".settings"
+    delete ".vscode"
+    delete '.DS_Store'
+    delete '.idea'
+    // vérifier si le code ci-dessous est toujours d'actualité avec
+    // l'évolution du système d'évaluation ?
+    // Les langages faiblement typés c'est la MAL.
+    fileTree(dir: 'libs', include:'*', excludes: ['README.md', '.gitignore']).visit { f -> delete f.file}
+  }
+}
