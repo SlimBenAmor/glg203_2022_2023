@@ -1,0 +1,13 @@
+README.md
+README_TECH.md
+src
+sql
+docker-compose-test-db.yml
+docker-compose.yml
+build.gradle
+settings.gradle
+.gitignore
+gradle
+gradlew
+gradlew.bat
+
