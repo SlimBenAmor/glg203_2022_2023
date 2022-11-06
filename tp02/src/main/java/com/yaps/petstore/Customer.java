@@ -1,6 +1,7 @@
 package com.yaps.petstore;
 
 import java.lang.reflect.Field;
+import java.text.BreakIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -138,51 +139,55 @@ public class Customer {
 
   public void setMail(String mail) {
     this.mail = mail;
-  }
+  }  
 
-  private boolean checkStr(String string) {
-    if (string == null || string.isEmpty() || string.trim().isEmpty()) {
-      return false;
+  private boolean checkNotEmptyProperty(String propertyName) {
+    boolean validProperty = false;
+    try {
+      // System.out.println(propertyName);
+      // Class<Customer>clazz = (Class<Customer>) this.getClass();
+      Field field = this.getClass().getDeclaredField(propertyName);
+      String fieldValue = (String) field.get(this);
+      validProperty = (fieldValue != null) && (!fieldValue.isEmpty()) && (!fieldValue.trim().isEmpty());
+    } catch (NoSuchFieldException e) {
+      throw new RuntimeException(e);
+    } catch (SecurityException e) {
+      throw new RuntimeException(e);
+    } catch (IllegalArgumentException | IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
-    return true;
+    return validProperty;
   }
-
+  
   public boolean checkId() {
-    return this.checkStr(this.id);
+    return this.checkNotEmptyProperty("id");
   }
 
   public boolean checkData() throws CustomerCheckException {
-    Field[] declaredFields = this.getClass().getDeclaredFields();
-    try {
-      for (Field field : declaredFields) {
-        if (!this.checkStr((String) field.get(this))) {
-          throw new CustomerCheckException("CustomerCheckException");
-
-        }
+    String propertiesToCheck[] = { "id", "firstname", "lastname" };
+    boolean validProperties = true;
+    for (String property : propertiesToCheck) {
+      if (!checkNotEmptyProperty(property)) {
+        validProperties = false;
+        throw new CustomerCheckException(getCheckDataError());
       }
-    } catch (IllegalAccessException e) {
-      return false;
     }
-    return true;
-
+    return validProperties;
   }
 
   public String getCheckDataError() {
-    Field[] declaredFields = this.getClass().getDeclaredFields();
-    try {
-      for (Field field : declaredFields) {
-        if (!this.checkStr((String) field.get(this))) {
-          String varName = field.getName();
-          if (varName.endsWith("name")) {
-            varName = varName.substring(0, varName.length() - 4) + " name";
-          }
-          return "Invalid " + varName;
+    String propertiesToCheck[] = { "id", "firstname", "lastname" };
+    String message = "Valid";
+    for (String property : propertiesToCheck) {
+      if (!checkNotEmptyProperty(property)) {
+        if (property.endsWith("name")) {
+          property = property.substring(0, property.length() - 4) + " name";
         }
+        message = "Invalid customer " + property;
+        break;
       }
-    } catch (IllegalAccessException e) {
-      return "Invalid ";
     }
-    return "Valid";
+    return message;
   }
 
   public boolean checkMail() {
