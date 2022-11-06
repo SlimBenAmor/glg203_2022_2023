@@ -9,9 +9,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.yaps.petstore.exceptions.ValidationException;
 import com.yaps.petstore.validation.annotation.IsNotEmpty;
+import com.yaps.petstore.validation.annotation.ContainsOnly;
 
 public class Validator {
 
@@ -24,6 +27,7 @@ public class Validator {
     public Validator() {
         // On configure le validateur
         annotationProcessorMap.put(IsNotEmpty.class, this::checkIsNotEmpty);
+        annotationProcessorMap.put(ContainsOnly.class, this::checkContainsOnly);
         // ici, votre code pour d'autres annotations...
         // ...
     }
@@ -106,4 +110,42 @@ public class Validator {
 
     // ici votre code : ...
     // ...
+
+    private Optional<ValidationErrorMessage> checkContainsOnly(Annotation a, Method m, Object o) {
+        try {
+            ContainsOnly actualAnnotation = (ContainsOnly) a;            
+            Object res = m.invoke(o);
+            boolean ok = true;
+            if (res == null) {
+                ok = true;
+            } else if (res instanceof String) {
+                String s = (String) res;
+                // /*
+                String regex = "["+actualAnnotation.value()+"]*"; // "^(\\+[0-9]{2}([-\\s\\.]{0,1})[1-9]\\2|0[1-9]([-\\s\\.]{0,1}))([0-9]{2}(\\2|\\3)){3,4}[0-9]{2}$";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(s.trim());
+                ok =  matcher.matches(); //*/
+                /*Set<Character> validCharSet = actualAnnotation.value().chars().mapToObj(c -> (char) c).collect(Collectors.toSet());
+                if (!s.trim().isEmpty()) {
+                    for (int i = 0; i < s.length(); i++) {
+                        // if (actualAnnotation.value().indexOf(s.charAt(i)) < 0) {
+                        if (!validCharSet.contains(s.charAt(i))){
+                            ok = false;
+                            break;
+                        }
+                    }
+               }*/
+            } else {
+                ok = false;
+            }
+            if (ok) {
+                return Optional.empty();
+            } else {
+                return Optional.of(
+                        new ValidationErrorMessage(actualAnnotation.message()));
+            }
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

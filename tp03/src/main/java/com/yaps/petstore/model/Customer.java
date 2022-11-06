@@ -3,6 +3,7 @@ package com.yaps.petstore.model;
 import com.yaps.petstore.exceptions.ValidationException;
 import com.yaps.petstore.validation.Validator;
 import com.yaps.petstore.validation.annotation.IsNotEmpty;
+import com.yaps.petstore.validation.annotation.ContainsOnly;
 
 /**
  * This class represents a customer for the YAPS company.
@@ -110,7 +111,7 @@ public final class Customer  {
 	public void setFirstname(final String firstname) {
 		this.firstname = firstname;
 	}
-
+	@IsNotEmpty(message = "Invalid customer last name")
 	public String getLastname() {
 		return this.lastname;
 	}
@@ -119,7 +120,7 @@ public final class Customer  {
 		this.lastname = lastname;
 	}
 
-	// @ContainsOnly(value = "0123456789 ", message="telephone should only contain digits")
+	@ContainsOnly(value = "0123456789 ", message = "telephone should only contain digits")
 	public String getTelephone() {
 		return this.telephone;
 	}
