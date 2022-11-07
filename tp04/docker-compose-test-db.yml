@@ -12,4 +12,16 @@ services:
       MARIADB_ROOT_PASSWORD: glg203
       MARIADB_DATABASE: petstore03
 
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8000:80
+    environment:
+      - PMA_HOST=db
+      - PMA_PORT=3306
+    depends_on:
+      - db
+    links:
+      - db:db
+
 
