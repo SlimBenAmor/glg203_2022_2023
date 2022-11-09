@@ -33,4 +33,6 @@ public abstract class DomainObject {
 	 */
 	abstract public String shortDisplay();
 
+	public abstract void checkData() throws CheckException;
+
 }
