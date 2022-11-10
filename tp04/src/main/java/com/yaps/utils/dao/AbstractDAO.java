@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
 import com.yaps.utils.dao.exception.DataAccessException;
 import com.yaps.utils.dao.exception.DuplicateKeyException;
@@ -48,7 +49,7 @@ public abstract class AbstractDAO<T extends DomainObject> {
                     + " ( id, " + String.join(", ", getFieldsNames()) + ")"
                     + " values (?"+", ?".repeat(getFieldsNames().length)+")";
             try (PreparedStatement pst = getConnection().prepareStatement(sql)) {
-                int fieldsOrder[] = { 1, 2, 3, 4 };
+                int fieldsOrder[] = IntStream.rangeClosed(1, getFieldsNames().length+1).toArray();
                 fillPreparedStatement(pst,obj,fieldsOrder);
                 pst.executeUpdate();
             } catch (SQLException e) {
@@ -71,7 +72,9 @@ public abstract class AbstractDAO<T extends DomainObject> {
         }
         String sql = "update " + getTableName() + " set "+String.join(" = ?,  ", getFieldsNames())+" = ? where id = ?";
         try (PreparedStatement pst = getConnection().prepareStatement(sql)) {            
-            int fieldsOrder[] = { 4, 1, 2, 3 };
+            int N = getFieldsNames().length;
+            int[] fieldsOrder = IntStream.rangeClosed(0, N).toArray();
+            fieldsOrder[0] = N+1;
             fillPreparedStatement(pst,obj,fieldsOrder);
             pst.executeUpdate();
         } catch (SQLException e) {

@@ -21,12 +21,9 @@ public class CategoryDAO extends AbstractDAO<Category> {
     @Override
     protected void fillPreparedStatement(PreparedStatement pst, Category category, int[] fieldsOrder)
             throws SQLException {
-        if (fieldsOrder[0] > 3) {
-            fieldsOrder[0] -= 1;
-        }
-        pst.setString(fieldsOrder[0], category.getId());
-        pst.setString(fieldsOrder[1], category.getName());
-        pst.setString(fieldsOrder[2], category.getDescription());
+        pst.setObject(fieldsOrder[0], category.getId());
+        pst.setObject(fieldsOrder[1], category.getName());
+        pst.setObject(fieldsOrder[2], category.getDescription());
     }
 
     protected Category extractData(ResultSet res) throws SQLException {

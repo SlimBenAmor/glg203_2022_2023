@@ -9,10 +9,7 @@ import java.util.Optional;
 import com.yaps.petstore.domain.product.Product;
 import com.yaps.petstore.domain.product.ProductDAO;
 import com.yaps.utils.dao.AbstractDAO;
-import com.yaps.utils.dao.exception.DataAccessException;
-import com.yaps.utils.dao.exception.DuplicateKeyException;
 import com.yaps.utils.dao.exception.ObjectNotFoundException;
-import com.yaps.utils.model.CheckException;
 
 /**
  * This class does all the database access for the class Item.
@@ -28,10 +25,10 @@ public class ItemDAO extends AbstractDAO<Item> {
 
     @Override
     protected void fillPreparedStatement(PreparedStatement pst, Item item, int[] fieldsOrder) throws SQLException {
-        pst.setString(fieldsOrder[0], item.getId());
-        pst.setString(fieldsOrder[1], item.getName());
-        pst.setDouble(fieldsOrder[2], item.getUnitCost());
-        pst.setString(fieldsOrder[3], item.getProduct().getId());
+        pst.setObject(fieldsOrder[0], item.getId());
+        pst.setObject(fieldsOrder[1], item.getName());
+        pst.setObject(fieldsOrder[2], item.getUnitCost());
+        pst.setObject(fieldsOrder[3], item.getProduct().getId());
     }
 
     protected Item extractData(ResultSet res) throws SQLException, ObjectNotFoundException {

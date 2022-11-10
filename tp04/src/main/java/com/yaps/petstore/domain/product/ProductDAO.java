@@ -26,10 +26,10 @@ public class ProductDAO extends AbstractDAO<Product> {
 
     @Override
     protected void fillPreparedStatement(PreparedStatement pst, Product product, int[] fieldsOrder) throws SQLException {
-        pst.setString(fieldsOrder[0], product.getId());
-        pst.setString(fieldsOrder[1], product.getName());
-        pst.setString(fieldsOrder[2], product.getDescription());
-        pst.setString(fieldsOrder[3], product.getCategory().getId());
+        pst.setObject(fieldsOrder[0], product.getId());
+        pst.setObject(fieldsOrder[1], product.getName());
+        pst.setObject(fieldsOrder[2], product.getDescription());
+        pst.setObject(fieldsOrder[3], product.getCategory().getId());
     }
 
     protected Product extractData(ResultSet res) throws SQLException, ObjectNotFoundException {
