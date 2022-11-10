@@ -1,0 +1,30 @@
+plugins {
+    id 'yaps.boot-app-conventions'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'	
+  // On force le serveur à une version de jetty qui supporte javax.
+  
+  implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jetty', version: '2.7.5'
+  implementation project(':customerCore:')
+  testImplementation 'net.sourceforge.htmlunit:htmlunit'
+  implementation "org.owasp.encoder:encoder:1.2.3"
+  runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+}
+
+
+task distClean {
+  dependsOn("clean")
+  doLast {
+    delete "bin"
+    delete ".classpath"
+    delete ".gradle"
+    delete ".nb-gradle"
+    delete ".project"
+    delete ".settings"
+    delete ".vscode"
+    delete '.DS_Store'
+    delete '.idea'
+  }
+}

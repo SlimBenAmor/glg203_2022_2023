@@ -1,0 +1,19 @@
+plugins {
+    id 'yaps.java-library-conventions'
+}
+
+// TODO : factoriser distClean...
+task distClean {
+  dependsOn("clean")
+  doLast {
+    delete "bin"
+    delete ".classpath"
+    delete ".gradle"
+    delete ".nb-gradle"
+    delete ".project"
+    delete ".settings"
+    delete ".vscode"
+    delete '.DS_Store'
+    delete '.idea'
+  }
+}
