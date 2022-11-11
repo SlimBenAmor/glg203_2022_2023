@@ -15,8 +15,8 @@ public class CategoryDAO extends AbstractDAO<Category> {
         super(connection, "category", Category.class);
     }
 
-    protected Category extractSpecificData(List<Object> argList) throws SQLException {
-        return new Category(argList);
+    protected Category extractSpecificData(List<Object> argList) {
+        return new Category((String) argList.get(0), (String) argList.get(1), (String) argList.get(2));
     }
 
 }

@@ -29,12 +29,6 @@ public final class Category extends DomainObject {
         this.description = description;
     }
 
-    public Category(final List<Object> argList) {
-        super((String) argList.get(0));
-        this.name = (String) argList.get(1);
-        this.description = (String) argList.get(2);
-    }
-
     public String getName() {
         return name;
     }

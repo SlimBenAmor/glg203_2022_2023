@@ -20,7 +20,7 @@ public class ItemDAO extends AbstractDAO<Item> {
         super(connection, "item", Item.class);
     }
 
-    protected Item extractSpecificData(List<Object> argList) throws SQLException, ObjectNotFoundException {
+    protected Item extractSpecificData(List<Object> argList) throws ObjectNotFoundException {
         ProductDAO productDAO = new ProductDAO(getConnection());
         Optional<Product> opt = productDAO.findById((String) argList.get(argList.size() - 1));
         if (opt.isPresent()) {

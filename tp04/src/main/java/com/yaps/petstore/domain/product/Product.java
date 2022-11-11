@@ -33,13 +33,6 @@ public final class Product extends DomainObject {
         this.category = category;
     }
 
-    public Product(final List<Object> argList) {
-        super((String) argList.get(0));
-        this.name = (String) argList.get(1);
-        this.description = (String) argList.get(2);
-        this.category = (Category) argList.get(3);
-    }
-
     public String getName() {
         return name;
     }

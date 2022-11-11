@@ -200,7 +200,7 @@ public abstract class AbstractDAO<T extends DomainObject> {
         // return type.getDeclaredConstructor(List.class).newInstance(argList);
     }
     
-    protected abstract T extractSpecificData(List<Object> argList) throws SQLException, ObjectNotFoundException;
+    protected abstract T extractSpecificData(List<Object> argList) throws ObjectNotFoundException;
     
     /**
      * fill prepared statement with object fields
