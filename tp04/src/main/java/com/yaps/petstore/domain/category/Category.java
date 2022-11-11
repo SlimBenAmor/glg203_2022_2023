@@ -1,7 +1,7 @@
 package com.yaps.petstore.domain.category;
-
-import com.yaps.utils.model.CheckException;
+import java.util.List;
 import com.yaps.utils.model.DomainObject;
+import com.yaps.petstore.domain.annotation.propertyMetaData;
 
 
 /**
@@ -11,7 +11,9 @@ import com.yaps.utils.model.DomainObject;
  */
 public final class Category extends DomainObject {
 
+    @propertyMetaData(order = 2, columnName = "name")
     private String name;
+    @propertyMetaData(order = 3, columnName = "description")
     private String description;
 
     public Category() {
@@ -27,13 +29,10 @@ public final class Category extends DomainObject {
         this.description = description;
     }
 
-    public void checkData() throws CheckException {
-        if (id == null || "".equals(id))
-            throw new CheckException("Invalid name");
-        if (name == null || "".equals(name))
-            throw new CheckException("Invalid name");
-        if (description == null || "".equals(description))
-            throw new CheckException("Invalid description");
+    public Category(final List<Object> argList) {
+        super((String) argList.get(0));
+        this.name = (String) argList.get(1);
+        this.description = (String) argList.get(2);
     }
 
     public String getName() {

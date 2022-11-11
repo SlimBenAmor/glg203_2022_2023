@@ -1,8 +1,8 @@
 package com.yaps.petstore.domain.item;
 
 import com.yaps.petstore.domain.product.Product;
-import com.yaps.utils.model.CheckException;
 import com.yaps.utils.model.DomainObject;
+import com.yaps.petstore.domain.annotation.propertyMetaData;
 
 
 /**
@@ -12,8 +12,11 @@ import com.yaps.utils.model.DomainObject;
  */
 public final class Item extends DomainObject {
 
+    @propertyMetaData(order = 2, columnName = "name")
     private String name;
+    @propertyMetaData(order = 3, columnName = "unit_cost")
     private double unitCost;
+    @propertyMetaData(order = 4, columnName = "product_fk")
     private Product product;
     
 
@@ -29,17 +32,6 @@ public final class Item extends DomainObject {
         this.name = name;
         this.unitCost = unitCost;
         this.product = product;
-    }
-
-    public void checkData() throws CheckException {
-        if (id == null || "".equals(id))
-            throw new CheckException("Invalid id");
-        if (name == null || "".equals(name))
-            throw new CheckException("Invalid name");
-        if (unitCost<0)
-            throw new CheckException("Invalid unit cost");
-        if (product == null || "".equals(product.getId()))
-            throw new CheckException("Invalid product");
     }
 
     public String getName() {

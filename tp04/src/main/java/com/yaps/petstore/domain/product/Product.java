@@ -1,8 +1,9 @@
 package com.yaps.petstore.domain.product;
 
+import java.util.List;
 import com.yaps.petstore.domain.category.Category;
-import com.yaps.utils.model.CheckException;
 import com.yaps.utils.model.DomainObject;
+import com.yaps.petstore.domain.annotation.propertyMetaData;
 
 
 /**
@@ -11,9 +12,11 @@ import com.yaps.utils.model.DomainObject;
  * and each product in items.
  */
 public final class Product extends DomainObject {
-
+    @propertyMetaData(order = 2, columnName = "name")
     private String name;
+    @propertyMetaData(order = 3, columnName = "description")
     private String description;
+    @propertyMetaData(order = 4, columnName = "category_fk")
     private Category category;
 
     public Product() {
@@ -30,15 +33,11 @@ public final class Product extends DomainObject {
         this.category = category;
     }
 
-    public void checkData() throws CheckException {
-        if (id == null || "".equals(id))
-            throw new CheckException("Invalid id");
-        if (name == null || "".equals(name))
-            throw new CheckException("Invalid name");
-        if (description == null || "".equals(description))
-            throw new CheckException("Invalid description");
-        if (category == null || "".equals(category.getId()))
-            throw new CheckException("Invalid category");
+    public Product(final List<Object> argList) {
+        super((String) argList.get(0));
+        this.name = (String) argList.get(1);
+        this.description = (String) argList.get(2);
+        this.category = (Category) argList.get(3);
     }
 
     public String getName() {
@@ -73,6 +72,7 @@ public final class Product extends DomainObject {
         buf.append("\ndescription=").append(description);
         return buf.toString();
     }
+
     @Override
     public String shortDisplay() {
         return id + "\t" + name;

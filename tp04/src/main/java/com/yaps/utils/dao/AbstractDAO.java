@@ -9,12 +9,15 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.IntStream;
+import java.lang.reflect.Field;
+import org.apache.commons.lang3.ArrayUtils;
 
 import com.yaps.utils.dao.exception.DataAccessException;
 import com.yaps.utils.dao.exception.DuplicateKeyException;
 import com.yaps.utils.dao.exception.ObjectNotFoundException;
 import com.yaps.utils.model.CheckException;
 import com.yaps.utils.model.DomainObject;
+import com.yaps.petstore.domain.annotation.propertyMetaData;
 
 /**
  * Une base pour implémenter le pattern Data Access Object.
@@ -25,12 +28,16 @@ public abstract class AbstractDAO<T extends DomainObject> {
 
     private Connection connection;
     private final String tableName;
-    private final String [] fieldsNames;
+    private final Class<T> type;
+    private final String[] fieldsNames;
+    
 
-    protected AbstractDAO(Connection connection, String tableName, String [] fieldsNames) {
+    public AbstractDAO(Connection connection, String tableName, Class<T> type) {
         this.connection = connection;
         this.tableName = tableName;
-        this.fieldsNames = fieldsNames.clone();
+        this.type = type;
+        this.fieldsNames = createFieldsNames();//fieldsNames.clone();
+        
     }
 
     protected Connection getConnection() {
@@ -164,6 +171,16 @@ public abstract class AbstractDAO<T extends DomainObject> {
         return fieldsNames;
     }
 
+    protected String[] createFieldsNames() {
+        Field[] declaredFields = type.getDeclaredFields();
+        List<String> myList = new ArrayList<String>();
+        for (Field field : declaredFields) {
+            propertyMetaData ann = field.getAnnotation(propertyMetaData.class);
+            myList.add(ann.columnName());
+        }
+        return myList.toArray(new String[0]);
+    }
+
     /**
      * Extract Dara from the result of SQL query (ResultSet)
      * and construct a T object
@@ -171,7 +188,19 @@ public abstract class AbstractDAO<T extends DomainObject> {
      * @param res
      * @return
      */
-    protected abstract T extractData(ResultSet res) throws SQLException,ObjectNotFoundException;
+    protected T extractData(ResultSet res) throws SQLException, ObjectNotFoundException {
+        // String id = res.getString("id");
+        List<Object> argList = new ArrayList<>();
+        argList.add(res.getString("id"));
+        String[] columns = getFieldsNames();
+        for(String col : columns){
+            argList.add(res.getString(col));
+        }
+        return extractSpecificData(argList);
+        // return type.getDeclaredConstructor(List.class).newInstance(argList);
+    }
+    
+    protected abstract T extractSpecificData(List<Object> argList) throws SQLException, ObjectNotFoundException;
     
     /**
      * fill prepared statement with object fields
@@ -182,6 +211,27 @@ public abstract class AbstractDAO<T extends DomainObject> {
      * @param fieldsOrder
      * 
      */
-    protected abstract void fillPreparedStatement(PreparedStatement pst, T obj, int[] fieldsOrder) throws SQLException;
+    protected void fillPreparedStatement(PreparedStatement pst, T obj, int[] fieldsOrder) throws SQLException{
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        Field[] declaredParentFields = obj.getClass().getSuperclass().getDeclaredFields();
+        Field[] declaredAllFields = ArrayUtils.addAll(declaredParentFields, declaredFields);
+        try {
+            for (Field field : declaredAllFields) {
+                field.setAccessible(true);
+                propertyMetaData ann = field.getAnnotation(propertyMetaData.class);
+                int pos = (ann.order() + fieldsOrder[0] - 1 - 2 * fieldsOrder.length) % fieldsOrder.length
+                        + fieldsOrder.length;
+                Object fieldObj= field.get(obj);
+                if (fieldObj instanceof DomainObject) {
+                    pst.setObject(pos, ((DomainObject) fieldObj).getId());
+                }
+                else {
+                    pst.setObject(pos, fieldObj);
+                }
+            } 
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
     
 }

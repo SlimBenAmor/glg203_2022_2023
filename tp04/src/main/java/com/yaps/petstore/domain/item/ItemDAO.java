@@ -1,10 +1,9 @@
 package com.yaps.petstore.domain.item;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.List;
 
 import com.yaps.petstore.domain.product.Product;
 import com.yaps.petstore.domain.product.ProductDAO;
@@ -17,29 +16,16 @@ import com.yaps.utils.dao.exception.ObjectNotFoundException;
  * @see Item
  */
 public class ItemDAO extends AbstractDAO<Item> {
-    private static final String COLUMNS[] = { "name", "unit_cost", "product_fk" };
-
     public ItemDAO(Connection connection) {
-        super(connection, "item", COLUMNS);
+        super(connection, "item", Item.class);
     }
 
-    @Override
-    protected void fillPreparedStatement(PreparedStatement pst, Item item, int[] fieldsOrder) throws SQLException {
-        pst.setObject(fieldsOrder[0], item.getId());
-        pst.setObject(fieldsOrder[1], item.getName());
-        pst.setObject(fieldsOrder[2], item.getUnitCost());
-        pst.setObject(fieldsOrder[3], item.getProduct().getId());
-    }
-
-    protected Item extractData(ResultSet res) throws SQLException, ObjectNotFoundException {
-        String id = res.getString("id");
-        String name = res.getString("name");
-        double unitCost = res.getDouble("unit_cost");
-        String productId = res.getString("product_fk");
+    protected Item extractSpecificData(List<Object> argList) throws SQLException, ObjectNotFoundException {
         ProductDAO productDAO = new ProductDAO(getConnection());
-        Optional<Product> opt = productDAO.findById(productId);
-        if (opt.isPresent()){
-            return new Item(id, name, unitCost, opt.get());
+        Optional<Product> opt = productDAO.findById((String) argList.get(argList.size() - 1));
+        if (opt.isPresent()) {
+            argList.set(argList.size() - 1, opt.get());
+            return new Item((String) argList.get(0), (String) argList.get(1), (double) Double.parseDouble((String)argList.get(2)), (Product) argList.get(3));
         }
         else {
             throw new ObjectNotFoundException();
