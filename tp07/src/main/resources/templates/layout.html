@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<!-- 
+    Template donnant la structure d'une de nos pages.
+
+    Pour cette application, nous avons choisi une approche un peu lourde mais simple :
+    les "vraies" pages vont explicitement inclure des fragments choisis de celle-ci.
+
+    C'est un peu répétitif, mais les notations sont simples. Dans de nombreux exemples du cours,
+    nous avons préféré utiliser l'approche inverse : les "vraies" pages spécifient quelles parties du layout elles
+    remplacent. C'est conceptuellement plus satisfaisant, mais la syntaxe est assez illisible.
+
+-->
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <th:block th:fragment="common-head">
+        <title>[[#{title}]]</title>
+        <link rel="stylesheet" th:href="@{/webjars/bulma/css/bulma.css}">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+    </th:block>
+</head>
+
+<body>
+    <th:block th:fragment="header-and-nav">
+        <header>
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    <a class="navbar-item" th:href="@{/}"><img id="banner_logo" th:src="@{/img/banner_logo.gif}" /></a>
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                        data-target="navMenu">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                    </a>
+                </div>
+                <div class="navbar-menu" id="navMenu">
+                    <div class="navbar-start">
+                        
+                    </div>
+                    <!-- navbar start, navbar end -->
+                    <div class="navbar-end">
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link" aria-haspopup="true" aria-controls="#dropdown-menu">
+                                [[#{menu.customer.dropdown}]]
+                            </a>
+                            <div class="navbar-dropdown">                            
+                                <a class="navbar-item" th:href="@{/customer/search}">
+                                    [[#{menu.customer.view}]]
+                                </a>
+                                <a class="navbar-item" th:href="@{/customer/create}">
+                                    [[#{menu.customer.create}]]
+                                </a>
+                            </div>
+                        </div>
+                        <div class="navbar-item has-dropdown is-hoverable">
+                            <a class="navbar-link" aria-haspopup="true" aria-controls="#dropdown-menu">
+                                [[#{menu.dropdown}]]
+                            </a>
+                            <div class="navbar-dropdown">
+                                <a class="navbar-item" th:href="@{/category/view?id=BIRDS}"
+                                    th:text="#{menu.birds}"></a>
+                                <a class="navbar-item" th:href="@{/category/view?id=CATS}"
+                                    th:text="#{menu.cats}"></a>
+                                <a class="navbar-item" th:href="@{/category/view?id=DOGS}"
+                                    th:text="#{menu.dogs}"></a>
+                                <a class="navbar-item" th:href="@{/category/view?id=FISH}"
+                                    th:text="#{menu.fish}"></a>
+                                <a class="navbar-item" th:href="@{/category/view?id=REPTILES}"
+                                    th:text="#{menu.reptiles}"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    </th:block>
+
+    <th:block th:fragment="footer-and-js">
+        <footer th:fragment="footer" class="footer">
+            <div class="block footer-text">
+            [[#{footer.demo}]]
+            </div>
+            <div id="logos" class="block center-text">
+                (ici les logos des logiciels utilisés)
+            </div>
+        </footer>
+        <th:block>
+            <script th:src="@{/js/script.js}"></script>
+        </th:block>
+    </th:block>
+</body>
+
+</html>
