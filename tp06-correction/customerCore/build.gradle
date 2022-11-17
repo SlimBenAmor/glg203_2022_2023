@@ -1,0 +1,19 @@
+plugins {
+    id 'yaps.boot-library-conventions'
+    id 'java-library' // allows "api" for transitive dependencies, for instance...
+}
+
+dependencies {
+    // some of the classes of yapsDBUtils appear in method returns, and so on.
+    // Basically, yapsDBUtils is a framework used by our class, so 
+    // it's somehow logical to let it leak.
+	api project(':yapsDBUtils:')
+
+    testImplementation 'org.dbunit:dbunit:2.7.3'
+    //runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+    testRuntimeOnly 'mysql:mysql-connector-java:8.0.25'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

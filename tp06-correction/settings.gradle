@@ -1,0 +1,10 @@
+rootProject.name = 'tp06-servlets'
+
+
+include(':customerCore:')
+include(':customerTextApplication:')
+include(':customerWebApplication:')
+include(':yapsTextUI:')
+include(':yapsDBUtils:')
+
+

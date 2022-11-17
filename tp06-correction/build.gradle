@@ -1,0 +1,15 @@
+// Normalement, on n'a pas de build.gradle à la racine d'un 
+// projet multi-modules.
+// Ici, nous appliquons le système décrit dans https://docs.gradle.org/current/userguide/plugins.html#sec:subprojects_plugins_dsl
+// pour factoriser les versions des plugins à utiliser...
+plugins {
+    // Définit la version du plugin à utiliser, mais ne l'appelle pas !
+    id 'io.spring.dependency-management' version "1.1.0" apply false
+    id 'org.springframework.boot' version '2.7.5' apply false 
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+

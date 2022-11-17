@@ -1,0 +1,13 @@
+plugins {
+    // Apply the common convention plugin for shared build configuration between library and application projects.
+    id 'yaps.boot-common-conventions'
+    id 'org.springframework.boot' apply false
+}
+
+bootJar {
+   enabled = false
+}
+
+jar {
+    enabled = true
+}

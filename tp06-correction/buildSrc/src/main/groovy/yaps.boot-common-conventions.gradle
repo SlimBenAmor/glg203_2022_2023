@@ -1,0 +1,17 @@
+/**
+ * Common settings for spring boot.
+ */
+
+plugins {
+   id 'org.springframework.boot' apply false
+   id 'io.spring.dependency-management'
+   id 'yaps.java-common-conventions'
+}
+
+
+
+dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'    
+}

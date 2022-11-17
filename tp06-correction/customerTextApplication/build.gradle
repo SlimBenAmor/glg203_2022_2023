@@ -1,0 +1,44 @@
+plugins {
+  id 'yaps.boot-app-conventions'
+  id 'application'  // pour pouvoir lancer avec "gradle run"
+}
+
+// a) use gradle run to start the software
+// b) build an executable jar
+
+mainClassName = 'com.yaps.petstore.customerApplication.CustomerApplication'
+
+run {
+    standardInput = System.in
+}
+
+// Configuration pour le plugin java
+jar {
+   manifest {
+       attributes "Main-Class": "${mainClassName}"
+   }
+}
+
+dependencies {
+  implementation project(':yapsTextUI:')
+  implementation project(':customerCore:')
+  // implementation project(':yapsDBUtils:')
+  runtimeOnly 'mysql:mysql-connector-java:8.0.25'
+}
+
+
+
+task distClean {
+  dependsOn("clean")
+  doLast {
+    delete "bin"
+    delete ".classpath"
+    delete ".gradle"
+    delete ".nb-gradle"
+    delete ".project"
+    delete ".settings"
+    delete ".vscode"
+    delete '.DS_Store'
+    delete '.idea'
+  }
+}
