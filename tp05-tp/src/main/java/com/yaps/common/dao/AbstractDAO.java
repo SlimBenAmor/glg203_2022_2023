@@ -75,7 +75,7 @@ public abstract class AbstractDAO<T extends DomainObject> implements DAO<T> {
      * 
      * @return
      */
-    protected String getTableName() {
+    public String getTableName() {
         return tableName;
     }
 
