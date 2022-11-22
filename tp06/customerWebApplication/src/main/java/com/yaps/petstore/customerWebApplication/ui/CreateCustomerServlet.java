@@ -28,7 +28,25 @@ public class CreateCustomerServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        throw new RuntimeException("Écrivez-moi !!!!!!!");
+        String firstname = req.getParameter("firstname");
+        String lastname = req.getParameter("lastname");
+        String telephone = req.getParameter("telephone");
+        String street1 = req.getParameter("street1");
+        String street2 = req.getParameter("street2");
+        String city = req.getParameter("city");
+        String zipcode = req.getParameter("zipcode");
+        String state = req.getParameter("state");
+        String country = req.getParameter("country");
+        // Customer customer = new Customer("", firstname, lastname, telephone, street1, street2, city, state, zipcode, country);
+        Address address = Address.builder().setStreet1(street1).setStreet2(street2).setCity(city).setState(state).setZipcode(zipcode).setCountry(country).build();
+        Customer customer = new Customer("", firstname, lastname, telephone, address);
+        PrintWriter writer = resp.getWriter();
+        try{
+            String id = customerService.save(customer);
+            resp.sendRedirect(req.getContextPath() + "/view?id="+id);
+        } catch (CheckException e){
+            writer.write("<b>incorrect input for customer : first name and last names are mandatory</b>");
+        }
     }
 
 }

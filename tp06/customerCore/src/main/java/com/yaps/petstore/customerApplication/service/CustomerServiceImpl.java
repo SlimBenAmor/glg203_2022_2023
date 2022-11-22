@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.yaps.common.dao.ConnectionManager;
 import com.yaps.common.dao.DAO;
 import com.yaps.common.dao.IdSequenceDAO;
-import com.yaps.common.dao.exception.DataAccessException;
 import com.yaps.common.dao.exception.DuplicateKeyException;
 import com.yaps.common.dao.exception.ObjectNotFoundException;
 import com.yaps.common.model.CheckException;
@@ -84,7 +83,23 @@ public class CustomerServiceImpl implements CustomerService {
     public void removeAll() {
         manager.open();
         try {
-            dao.removeAll();            
+            dao.removeAll();
+        } finally {
+            manager.close();
+        }
+    }
+    
+    @Override
+    public String save(Customer customer) throws CheckException {
+        manager.open();
+        try {
+            int id = idSequenceDAO.getCurrentMaxId("customer")+1;
+            customer.setId(Integer.toString(id));
+            dao.save(customer);
+            idSequenceDAO.setCurrentMaxId("customer",id);
+            return Integer.toString(id);
+        } catch (DuplicateKeyException e) {
+            throw new RuntimeException("Wrong auto increment generated id",e);
         } finally {
             manager.close();
         }

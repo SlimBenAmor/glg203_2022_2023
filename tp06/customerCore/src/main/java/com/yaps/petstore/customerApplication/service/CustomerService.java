@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.yaps.common.dao.exception.DuplicateKeyException;
 import com.yaps.common.dao.exception.ObjectNotFoundException;
 import com.yaps.common.model.CheckException;
 import com.yaps.common.service.EntityService;
